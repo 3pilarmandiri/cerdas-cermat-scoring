@@ -1,0 +1,4 @@
+/dashboard-operator/vendor
+/dashboard-score/.next
+/dashboard-score/node_modules
+/ws-server/node_modules

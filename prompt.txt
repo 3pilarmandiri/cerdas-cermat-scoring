@@ -1,0 +1,26 @@
+saya akan membuat aplikasi untuk pertandingan cerdas cermat. 
+menggunakan laravel dan mysql. 
+
+kebutuhan sistem. 
+
+1. ada data pertandingan yang mepunyai atribut 
+   - nama pertandingan 
+   - keterangan 
+
+2. pertandingan terdiri dari kelompok A, B,C dan D. 
+   mengisikan nama perserta masing - masing kelompok. misal kelompok A : SMP Negeri 1 dan seterusnya 
+3. pencatatan skor seetiap kelompok dalam setiap pertandingan. 
+
+setelah data pertandingan disimpan. ada tombol MULAI. akan membuka halaman baru detail pertandingan. 
+dimana ada input skor terhadap kelompok yang mendapatkan nilai. setiap skor akan disimpan historinya. 
+kemudian dikalkulasi sehingga mejadi format json sbb : 
+
+{
+   "A": 100, 
+   "B": 50, 
+   "C" : 200, 
+   "D" : 80
+}
+
+data ini akan dihit ke endppint http://localhost:3003/broadcast-data
+dengan payload json seperti di atas 

@@ -1,0 +1,65 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./dashboard-operator/Dockerfile
+    container_name: cerdas-cermat-app
+    working_dir: /var/www
+    volumes:
+      - ./dashboard-operator:/var/www
+    ports:
+      - "8000:8000"
+      - "5173:5173"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - db
+    command: bash -c "composer install && npm install && php artisan migrate  && php artisan serve --host=0.0.0.0 --port=8000"
+
+  db:
+    image: mysql:8.0
+    container_name: cerdas-cermat-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: cerdas_cermat
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+
+  ws-server:
+    image: node:20
+    container_name: ws-server
+    working_dir: /app
+    ports:
+      - "3003:3003"
+    command: bash -c "npm install && node server.js"
+    volumes:
+      - ./ws-server:/app
+
+  dashboard:
+    image: node:20
+    container_name: dashboard
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    command: bash -c "npm install && npm run dev"
+    volumes:
+      - ./dashboard-score:/app
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: root
+
+volumes:
+  dbdata:
