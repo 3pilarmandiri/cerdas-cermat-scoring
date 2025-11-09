@@ -1,48 +1,60 @@
 version: "3.9"
 
 services:
-  # app:
-  #   build:
-  #     context: .
-  #     dockerfile: ./dashboard-operator/Dockerfile
-  #   container_name: cerdas-cermat-app
-  #   working_dir: /var/www
-  #   volumes:
-  #     - ./dashboard-operator:/var/www
-  #   ports:
-  #     - "8000:8000"
-  #     - "5173:5173"
-  #   extra_hosts:
-  #     - "host.docker.internal:host-gateway"
-  #   depends_on:
-  #     - db
-  #   command: bash -c "composer install && npm install && php artisan migrate  && php artisan serve --host=0.0.0.0 --port=8000"
-
-  frankenphp:
+  app:
     build:
       context: .
-      dockerfile: ./dashboard-operator/Dockerfile.franken
-    container_name: laravel-frankenphp
-    ports:
-      - "9090:80"
+      dockerfile: ./dashboard-operator/Dockerfile
+    container_name: cerdas-cermat-app
+    working_dir: /var/www
     volumes:
-      - ./dashboard-operator:/app
-    working_dir: /app
-    environment:
-      DOCUMENT_ROOT: /app/public
-      CADDY_GLOBAL_OPTIONS: "auto_https off"
-      SERVER_NAME: ":80"
-      PHP_INI_DISPLAY_ERRORS: 1
-      PHP_INI_DISPLAY_STARTUP_ERRORS: 1
-      PHP_INI_MEMORY_LIMIT: -1
-      PHP_INI_UPLOAD_MAX_FILESIZE: 50M
-      PHP_INI_POST_MAX_SIZE: 50M
-      PHP_INI_MAX_EXECUTION_TIME: 300
-      PHP_INI_ERROR_REPORTING: E_ALL
-    restart: unless-stopped
+      - ./dashboard-operator:/var/www
+    ports:
+      - "8000:8000"
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    # command: bash -c "composer install && npm install && npm run build"
+    depends_on:
+      - db
+    command: bash -c "composer install && npm install && php artisan migrate  && php artisan serve --host=0.0.0.0 --port=8000"
+
+  vite-side-car:
+    build:
+      context: .
+      dockerfile: ./dashboard-operator/Dockerfile
+    container_name: vite-side-car
+    working_dir: /var/www
+    volumes:
+      - ./dashboard-operator:/var/www
+    ports:
+      - "5173:5173"
+
+    depends_on:
+      - app
+    command: bash -c "npm run dev"
+  # frankenphp:
+  #   build:
+  #     context: .
+  #     dockerfile: ./dashboard-operator/Dockerfile.franken
+  #   container_name: laravel-frankenphp
+  #   ports:
+  #     - "9090:80"
+  #   volumes:
+  #     - ./dashboard-operator:/app
+  #   working_dir: /app
+  #   environment:
+  #     DOCUMENT_ROOT: /app/public
+  #     CADDY_GLOBAL_OPTIONS: "auto_https off"
+  #     SERVER_NAME: ":80"
+  #     PHP_INI_DISPLAY_ERRORS: 1
+  #     PHP_INI_DISPLAY_STARTUP_ERRORS: 1
+  #     PHP_INI_MEMORY_LIMIT: -1
+  #     PHP_INI_UPLOAD_MAX_FILESIZE: 50M
+  #     PHP_INI_POST_MAX_SIZE: 50M
+  #     PHP_INI_MAX_EXECUTION_TIME: 300
+  #     PHP_INI_ERROR_REPORTING: E_ALL
+  #   restart: unless-stopped
+  #   extra_hosts:
+  #     - "host.docker.internal:host-gateway"
   db:
     image: mysql:8.0
     container_name: cerdas-cermat-db
