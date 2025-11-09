@@ -11,6 +11,7 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
+COPY .env.example .env
 
 # Copy existing app files (optional, kalau sudah ada)
 # COPY ./src /var/www
