@@ -1,23 +1,44 @@
 version: "3.9"
 
 services:
-  app:
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: ./dashboard-operator/Dockerfile
+  #   container_name: cerdas-cermat-app
+  #   working_dir: /var/www
+  #   volumes:
+  #     - ./dashboard-operator:/var/www
+  #   ports:
+  #     - "8000:8000"
+  #     - "5173:5173"
+  #   extra_hosts:
+  #     - "host.docker.internal:host-gateway"
+  #   depends_on:
+  #     - db
+  #   command: bash -c "composer install && npm install && php artisan migrate  && php artisan serve --host=0.0.0.0 --port=8000"
+
+  frankenphp:
     build:
       context: .
-      dockerfile: ./dashboard-operator/Dockerfile
-    container_name: cerdas-cermat-app
-    working_dir: /var/www
-    volumes:
-      - ./dashboard-operator:/var/www
+      dockerfile: ./dashboard-operator/Dockerfile.franken
+    container_name: laravel-frankenphp
     ports:
-      - "8000:8000"
-      - "5173:5173"
+      - "9090:80"
+    volumes:
+      - ./dashboard-operator:/app
+    working_dir: /app
+    environment:
+      DOCUMENT_ROOT: /app/public
+      CADDY_GLOBAL_OPTIONS: "auto_https off"
+      SERVER_NAME: ":80"
+      PHP_INI_DISPLAY_ERRORS: 1
+      PHP_INI_DISPLAY_STARTUP_ERRORS: 1
+      PHP_INI_ERROR_REPORTING: E_ALL
+    restart: unless-stopped
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    depends_on:
-      - db
-    command: bash -c "composer install && npm install && php artisan migrate  && php artisan serve --host=0.0.0.0 --port=8000"
-
+    # command: bash -c "composer install && npm install && npm run build"
   db:
     image: mysql:8.0
     container_name: cerdas-cermat-db
