@@ -6,7 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PertandinganController;
 
 Route::get('/', function () {
-    return dd(env('HTTPS'));
+    return dd(date('Y-m-d h:i:s'));
 });
 
 Route::get('/dashboard', function () {
