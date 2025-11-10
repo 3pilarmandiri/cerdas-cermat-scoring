@@ -20,16 +20,8 @@
                             Tambah Pertandingan
                         </button>
 
-                        <a href="{{ route('pertandingan.export') }}"
-                            class="inline-flex items-center bg-[#217346] hover:bg-[#1e6b3f] text-white px-4 py-2 rounded shadow transition transform hover:scale-105">
-                                <!-- Excel icon -->
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                    fill="currentColor" class="w-5 h-5 mr-2 text-white">
-                                    <path d="M4 4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h16a2
-                                            2 0 0 0 2-2V6a2 2 0 0 0-2-2H4zm3.54 5.12h1.92l1.5
-                                            2.64 1.5-2.64h1.93l-2.41 3.88L14.5 17h-1.93l-1.56-2.79L9.46
-                                            17H7.54l2.44-3.99-2.44-3.89zM18 6v12H6V6h12z"/>
-                                </svg>
+                        <a href="{{ route('pertandingan.export') }}">
+
                                 Export Excel
                             </a>
                     </div>
