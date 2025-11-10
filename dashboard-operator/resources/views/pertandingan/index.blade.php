@@ -31,10 +31,10 @@
                 <table class="min-w-full border border-gray-300">
                     <thead class="bg-gray-200 text-gray-700">
                         <tr>
-                            <th class="py-2 px-3 border">Nama</th>
+                            <th width="30%" class="py-2 px-3 border">Nama</th>
                             <th class="py-2 px-3 border">Keterangan</th>
-                            <th class="py-2 px-3 border">Mulai</th>
-                            <th class="py-2 px-3 border">Hapus</th>
+                            <th width="20%" class="py-2 px-3 border">Aksi</th>
+                            {{-- <th class="py-2 px-3 border">Hapus</th> --}}
                         </tr>
                     </thead>
                     <tbody>
@@ -44,12 +44,19 @@
                             <td class="py-2 px-3 border">{{ $p->keterangan }}</td>
                             <td class="py-2 px-3 border">
                                 <a href="{{ route('pertandingan.mulai', $p->id) }}"
-                                   class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
-                                   Mulai
-                                </a> &nbsp;
+                                    class="inline-flex items-center bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded transition transform hover:scale-105">
+                                        <!-- Play icon -->
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            fill="currentColor"
+                                            viewBox="0 0 20 20"
+                                            class="w-4 h-4 mr-1 text-white">
+                                            <path d="M6.5 5.5v9l8-4.5-8-4.5z" />
+                                        </svg>
+                                        Mulai
+                                    </a>
 
-                            </td>
-                            <td class="py-2 px-3 border">
+
+
                               <a href="#"
                                     onclick="deletePertandingan('{{ route('pertandingan.destroy', $p->id) }}')"
                                     class="inline-flex items-center bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded transition">
