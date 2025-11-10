@@ -21,9 +21,17 @@
                         </button>
 
                         <a href="{{ route('pertandingan.export') }}"
-                        class="bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700 transition">
-                        ⬇️ Export Excel
-                        </a>
+                            class="inline-flex items-center bg-[#217346] hover:bg-[#1e6b3f] text-white px-4 py-2 rounded shadow transition transform hover:scale-105">
+                                <!-- Excel icon -->
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                    fill="currentColor" class="w-5 h-5 mr-2 text-white">
+                                    <path d="M4 4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h16a2
+                                            2 0 0 0 2-2V6a2 2 0 0 0-2-2H4zm3.54 5.12h1.92l1.5
+                                            2.64 1.5-2.64h1.93l-2.41 3.88L14.5 17h-1.93l-1.56-2.79L9.46
+                                            17H7.54l2.44-3.99-2.44-3.89zM18 6v12H6V6h12z"/>
+                                </svg>
+                                Export Excel
+                            </a>
                     </div>
                 </div>
 
@@ -50,11 +58,21 @@
 
                             </td>
                             <td class="py-2 px-3 border">
-                               <a href="#"
-                                onclick="deletePertandingan('{{ route('pertandingan.destroy', $p->id) }}')"
-                                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
-                                Hapus
-                                </a>
+                              <a href="#"
+                                    onclick="deletePertandingan('{{ route('pertandingan.destroy', $p->id) }}')"
+                                    class="inline-flex items-center bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded transition">
+                                        <!-- Trash icon -->
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke-width="1.5"
+                                            stroke="currentColor"
+                                            class="w-4 h-4 mr-1">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M6 7.5h12m-9 3v6m6-6v6M4.5 7.5l.867 12.142A2.25 2.25 0 007.61 21h8.78a2.25 2.25 0 002.243-1.858L19.5 7.5M9.75 4.5h4.5a.75.75 0 01.75.75V6h-6V5.25a.75.75 0 01.75-.75z" />
+                                        </svg>
+                                        Hapus
+                                    </a>
 
                             </td>
                         </tr>
