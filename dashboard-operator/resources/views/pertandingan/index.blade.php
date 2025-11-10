@@ -33,7 +33,8 @@
                         <tr>
                             <th class="py-2 px-3 border">Nama</th>
                             <th class="py-2 px-3 border">Keterangan</th>
-                            <th class="py-2 px-3 border">Aksi</th>
+                            <th class="py-2 px-3 border">Mulai</th>
+                            <th class="py-2 px-3 border">Hapus</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -46,6 +47,9 @@
                                    class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
                                    Mulai
                                 </a> &nbsp;
+
+                            </td>
+                            <td class="py-2 px-3 border">
                                 <form action="{{ route('pertandingan.destroy', $p->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
@@ -53,7 +57,7 @@
 
                                         class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
                                         onclick="return confirm('Yakin ingin menghapus pertandingan ini? Semua data peserta & skor akan hilang!')">
-                                        Hapus X
+                                        Hapus
                                     </button>
                                 </form>
                             </td>
