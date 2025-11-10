@@ -9,41 +9,25 @@ const app = express();
 const server = http.createServer(app);
 const PORT = 3003;
 
-// --- Allowed Origins ---
-const allowedOrigins = [
-  'http://localhost:3000',       // typical Next.js dev
-  'http://localhost:3001',       // if you're using custom port
-  'http://127.0.0.1:3000',
-  'http://127.0.0.1:3001',
-  'http://host.docker.internal:3000',
-  'http://host.docker.internal:3001',
-];
-
-// --- Middleware CORS untuk Express ---
+// --- Middleware CORS: Allow all origins ---
 app.use(cors({
-  origin: function (origin, callback) {
-    // Izinkan permintaan tanpa origin (seperti dari Postman)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      console.log(`🚫 Blocked by CORS: ${origin}`);
-      return callback(new Error('CORS not allowed'));
-    }
-  },
+  origin: '*',             // ⬅️ Izinkan semua host
   methods: ['GET', 'POST'],
-  credentials: true,
+  credentials: false,
 }));
 app.use(bodyParser.json());
 
 // --- Socket.IO CORS ---
 const io = socketIo(server, {
   cors: {
-    origin: allowedOrigins,
+    origin: '*',           // ⬅️ Izinkan semua host
     methods: ['GET', 'POST'],
-    credentials: true,
+    credentials: false,
   },
 });
+
+// --- Latest data memory ---
+let latestData = { A: '0', B: '0', C: '0', D: '0' };
 
 // --- WebSocket Logic ---
 io.on('connection', (socket) => {
@@ -54,9 +38,6 @@ io.on('connection', (socket) => {
     console.log(`❌ User disconnected: ${socket.id}`);
   });
 });
-
-// --- Latest data memory ---
-let latestData = { A: '0', B: '0', C: '0', D: '0' };
 
 // --- HTTP Endpoints ---
 app.post('/broadcast-data', (req, res) => {
