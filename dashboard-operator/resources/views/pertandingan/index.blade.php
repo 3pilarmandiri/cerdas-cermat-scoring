@@ -50,16 +50,12 @@
 
                             </td>
                             <td class="py-2 px-3 border">
-                                <form action="{{ route('pertandingan.destroy', $p->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
+                               <a href="#"
+                                onclick="deletePertandingan('{{ route('pertandingan.destroy', $p->id) }}')"
+                                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
+                                Hapus
+                                </a>
 
-                                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-                                        onclick="return confirm('Yakin ingin menghapus pertandingan ini? Semua data peserta & skor akan hilang!')">
-                                        Hapus==========
-                                    </button>
-                                </form>
                             </td>
                         </tr>
                         @endforeach
@@ -104,6 +100,31 @@
                         btn.closest('.fixed').classList.add('hidden');
                     });
                 });
+
+                function deletePertandingan(url) {
+                    if (!confirm('Yakin ingin menghapus pertandingan ini? Semua data peserta & skor akan hilang!')) return;
+
+                   fetch(url, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json',
+                            },
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                alert('Pertandingan berhasil dihapus!');
+                                location.reload();
+                            } else {
+                                console.error('Delete failed:', response.status);
+                                alert('Gagal menghapus pertandingan!');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Terjadi kesalahan jaringan.');
+                        });
+                }
                 </script>
             </div>
         </div>

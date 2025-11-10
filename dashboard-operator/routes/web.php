@@ -22,8 +22,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/pertandingan', [PertandinganController::class, 'store'])->name('pertandingan.store');
     Route::get('/pertandingan/{id}/mulai', [PertandinganController::class, 'mulai'])->name('pertandingan.mulai');
 
-    Route::delete('/pertandingan/{id}', [\App\Http\Controllers\PertandinganController::class, 'destroy'])
+
+    Route::delete('/pertandingan/{id}', [PertandinganController::class, 'destroy'])
         ->name('pertandingan.destroy');
+
 
     Route::get('/pertandingan-export', [\App\Http\Controllers\PertandinganController::class, 'export'])
         ->name('pertandingan.export');

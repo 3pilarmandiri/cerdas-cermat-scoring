@@ -66,17 +66,21 @@ class PertandinganController extends Controller
     public function destroy($id)
     {
         $pertandingan = \App\Models\Pertandingan::findOrFail($id);
-
-        // Hapus semua relasi anak: skor_histories dan kelompoks
         foreach ($pertandingan->kelompoks as $kelompok) {
             $kelompok->skorHistories()->delete();
             $kelompok->delete();
         }
-
         $pertandingan->delete();
 
-        return redirect()->route('pertandingan.index')->with('success', 'Pertandingan berhasil dihapus.');
+        // If AJAX or API call
+        if (request()->expectsJson()) {
+            return response()->json(['message' => 'Pertandingan berhasil dihapus'], 200);
+        }
+
+        // If normal form submit
+        return redirect()->route('pertandingan.index')->with('success', 'Pertandingan berhasil dihapus');
     }
+
 
     public function export()
     {
