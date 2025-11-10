@@ -84,7 +84,7 @@ class PertandinganController extends Controller
 
     public function export()
     {
-        $filename = "brida-data-pertandingan-" . date("d-m-Y-H-I-S") . ".xlsx";
+        $filename = "brida-data-pertandingan-" . date("d-m-Y-H-I") . ".xlsx";
         // dd($filename);
         return Excel::download(new PertandinganExport, $filename);
     }
