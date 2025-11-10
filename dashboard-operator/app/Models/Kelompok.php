@@ -30,6 +30,7 @@ class Kelompok extends Model
         return $this->belongsTo(Pertandingan::class, 'pertandingan_id');
     }
 
+
     public function skorHistories()
     {
         return $this->hasMany(SkorHistory::class, 'kelompok_id');

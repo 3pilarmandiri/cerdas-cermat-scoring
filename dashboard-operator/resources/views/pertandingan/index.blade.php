@@ -80,30 +80,60 @@
                 </table>
 
                 <!-- Modal Tambah Pertandingan -->
-                <div id="modalAdd" class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 z-50 flex items-center justify-center">
-                    <div class="bg-white rounded-lg shadow-lg w-96">
-                        <form method="POST" action="{{ route('pertandingan.store') }}">
+                <!-- Modal Tambah Pertandingan -->
+                <div id="modalAdd" tabindex="-1" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div class="bg-white rounded-lg shadow-lg w-full max-w-lg">
+                        <div class="p-5 border-b">
+                            <h3 class="text-lg font-bold text-gray-800">Tambah Pertandingan</h3>
+                        </div>
+
+                        <form action="{{ route('pertandingan.store') }}" method="POST" class="p-5 space-y-4">
                             @csrf
-                            <div class="p-4 border-b">
-                                <h4 class="font-semibold text-lg">Tambah Pertandingan</h4>
+
+                            <div>
+                                <label class="block text-sm font-semibold">Nama Pertandingan</label>
+                                <input type="text" name="nama" class="w-full border rounded px-3 py-2" required>
                             </div>
-                            <div class="p-4 space-y-3">
+
+                            <div>
+                                <label class="block text-sm font-semibold">Keterangan</label>
+                                <textarea name="keterangan" class="w-full border rounded px-3 py-2"></textarea>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4 mt-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700">Nama Pertandingan</label>
-                                    <input type="text" name="nama" class="w-full border-gray-300 rounded mt-1" required>
+                                    <label class="block text-sm font-semibold text-gray-700">Kelompok A</label>
+                                    <input type="text" name="kelompok[A]" class="w-full border rounded px-3 py-2" placeholder="Nama peserta A" required>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700">Keterangan</label>
-                                    <textarea name="keterangan" class="w-full border-gray-300 rounded mt-1"></textarea>
+                                    <label class="block text-sm font-semibold text-gray-700">Kelompok B</label>
+                                    <input type="text" name="kelompok[B]" class="w-full border rounded px-3 py-2" placeholder="Nama peserta B" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700">Kelompok C</label>
+                                    <input type="text" name="kelompok[C]" class="w-full border rounded px-3 py-2" placeholder="Nama peserta C" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700">Kelompok D</label>
+                                    <input type="text" name="kelompok[D]" class="w-full border rounded px-3 py-2" placeholder="Nama peserta D" required>
                                 </div>
                             </div>
-                            <div class="flex justify-end p-4 border-t">
-                                <button type="button" data-modal-hide="modalAdd" class="px-3 py-1 bg-gray-400 text-white rounded mr-2">Batal</button>
-                                <button type="submit" class="px-3 py-1 bg-blue-600 text-white rounded">Simpan</button>
+
+                            <div class="flex justify-end mt-4">
+                                <button type="button"
+                                        data-modal-hide="modalAdd"
+                                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded mr-2">
+                                    Batal
+                                </button>
+                                <button type="submit"
+                                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                                    Simpan
+                                </button>
                             </div>
                         </form>
                     </div>
                 </div>
+
 
                 <script>
                 document.querySelectorAll('[data-modal-toggle]').forEach(btn => {

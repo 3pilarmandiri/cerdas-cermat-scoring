@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Kelompok;
 use App\Models\Pertandingan;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
+use App\Services\BroadcastService;
 
 
 use App\Exports\PertandinganExport;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PertandinganController extends Controller
 {
@@ -23,46 +24,43 @@ class PertandinganController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate(['nama' => 'required']);
-        $pertandingan = Pertandingan::create($request->only('nama', 'keterangan'));
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'kelompok.A' => 'required|string|max:255',
+            'kelompok.B' => 'required|string|max:255',
+            'kelompok.C' => 'required|string|max:255',
+            'kelompok.D' => 'required|string|max:255',
+        ]);
 
-        // otomatis buat kelompok A-D
-        foreach (['A', 'B', 'C', 'D'] as $kode) {
-            Kelompok::create([
-                'pertandingan_id' => $pertandingan->id,
+        // Buat pertandingan
+        $pertandingan = Pertandingan::create([
+            'nama' => $request->nama,
+            'keterangan' => $request->keterangan,
+        ]);
+
+        // Buat kelompok A–D
+        foreach ($request->kelompok as $kode => $namaKelompok) {
+            $pertandingan->kelompoks()->create([
                 'kode' => $kode,
-                'nama_peserta' => "Kelompok $kode",
+                'nama_peserta' => $namaKelompok,
                 'total_skor' => 0,
             ]);
         }
 
-        return redirect()->route('pertandingan.index');
+        return redirect()->route('pertandingan.index')->with('success', 'Pertandingan berhasil dibuat.');
     }
 
-    public function mulai($id)
+
+    public function mulai($id, BroadcastService $broadcast)
     {
-        $pertandingan = Pertandingan::with(['kelompoks' => function ($q) {
-            $q->orderBy('kode', 'asc');
-        }])->findOrFail($id);
+        $pertandingan = Pertandingan::with('kelompoks')->findOrFail($id);
 
-
-        // === Kirim broadcast awal ke WS_URL ===
-        $payload = $pertandingan->kelompoks->pluck('total_skor', 'kode')->toArray();
-        $wsUrl = env('WS_URL');
-
-        if ($wsUrl && !empty($payload)) {
-            try {
-                Http::timeout(2)->post($wsUrl, $payload);
-                Log::info('📡 Broadcast awal dikirim ke ' . $wsUrl, $payload);
-            } catch (\Throwable $e) {
-                // Jangan hentikan proses jika gagal
-                Log::warning('⚠️ Broadcast awal gagal ke ' . $wsUrl . ': ' . $e->getMessage());
-            }
-        }
-
+        // kirim data ke websocket
+        $broadcast->send($pertandingan);
 
         return view('pertandingan.mulai', compact('pertandingan'));
     }
+
     public function destroy($id)
     {
         $pertandingan = \App\Models\Pertandingan::findOrFail($id);

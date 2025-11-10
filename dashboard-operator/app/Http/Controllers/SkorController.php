@@ -5,41 +5,25 @@ namespace App\Http\Controllers;
 use App\Models\Kelompok;
 use App\Models\SkorHistory;
 use Illuminate\Http\Request;
+use App\Services\BroadcastService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 
 class SkorController extends Controller
 {
-    public function tambah(Request $request)
+    public function tambah(Request $request, BroadcastService $broadcast)
     {
-        $request->validate([
-            'kelompok_id' => 'required|uuid',
-            'nilai' => 'required|integer',
-        ]);
-
-        $kelompok = Kelompok::findOrFail($request->kelompok_id);
-
-        SkorHistory::create([
-            'kelompok_id' => $kelompok->id,
-            'nilai' => $request->nilai,
-        ]);
-
+        $kelompok = Kelompok::with('pertandingan')->findOrFail($request->kelompok_id);
+        $kelompok->skorHistories()->create(['nilai' => $request->nilai]);
         $kelompok->increment('total_skor', $request->nilai);
 
-        // Kirim hasil ke endpoint broadcast
-        $payload = $kelompok->pertandingan->kelompoks->pluck('total_skor', 'kode')->toArray();
 
-        $wsUrl = env('WS_URL', null);
+        $pertandingan = $kelompok->pertandingan()->with('kelompoks')->first();
 
-        if ($wsUrl) {
-            try {
-                Http::timeout(2)->post($wsUrl, $payload);
-            } catch (\Throwable $e) {
-                // Hanya tulis ke log, tidak hentikan proses
-                Log::warning('Broadcast gagal ke ' . $wsUrl . ': ' . $e->getMessage());
-            }
-        }
+        // 🔥 kirim data terbaru
+        $broadcast->send($pertandingan);
 
+        // return response()->json(['message' => 'Skor berhasil ditambahkan']);
         return response()->json([
             'success' => true,
             'payload' => $kelompok->pertandingan
