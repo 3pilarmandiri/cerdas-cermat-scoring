@@ -6,7 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PertandinganController;
 
 Route::get('/', function () {
-    return env('HTTPS');
+    return dd(env('HTTPS'));
 });
 
 Route::get('/dashboard', function () {
