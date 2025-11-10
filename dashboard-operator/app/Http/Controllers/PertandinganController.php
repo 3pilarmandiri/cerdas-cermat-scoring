@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Kelompok;
 use App\Models\Pertandingan;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+
+
+use App\Exports\PertandinganExport;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
@@ -58,5 +62,26 @@ class PertandinganController extends Controller
 
 
         return view('pertandingan.mulai', compact('pertandingan'));
+    }
+    public function destroy($id)
+    {
+        $pertandingan = \App\Models\Pertandingan::findOrFail($id);
+
+        // Hapus semua relasi anak: skor_histories dan kelompoks
+        foreach ($pertandingan->kelompoks as $kelompok) {
+            $kelompok->skorHistories()->delete();
+            $kelompok->delete();
+        }
+
+        $pertandingan->delete();
+
+        return redirect()->route('pertandingan.index')->with('success', 'Pertandingan berhasil dihapus.');
+    }
+
+    public function export()
+    {
+        $filename = "brida-data-pertandingan-" . date("d-m-Y-H-I-S") . ".xlsx";
+        // dd($filename);
+        return Excel::download(new PertandinganExport, $filename);
     }
 }

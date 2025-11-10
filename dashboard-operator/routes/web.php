@@ -6,7 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PertandinganController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return env('HTTPS');
 });
 
 Route::get('/dashboard', function () {
@@ -21,6 +21,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/pertandingan', [PertandinganController::class, 'index'])->name('pertandingan.index');
     Route::post('/pertandingan', [PertandinganController::class, 'store'])->name('pertandingan.store');
     Route::get('/pertandingan/{id}/mulai', [PertandinganController::class, 'mulai'])->name('pertandingan.mulai');
+
+    Route::delete('/pertandingan/{id}', [\App\Http\Controllers\PertandinganController::class, 'destroy'])
+        ->name('pertandingan.destroy');
+
+    Route::get('/pertandingan-export', [\App\Http\Controllers\PertandinganController::class, 'export'])
+        ->name('pertandingan.export');
 
     Route::post('/skor/tambah', [SkorController::class, 'tambah'])->name('skor.tambah');
     Route::get('/skor/history/{kelompok_id}', [SkorController::class, 'history'])->name('skor.history');

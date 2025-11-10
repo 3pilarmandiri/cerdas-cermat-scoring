@@ -8,14 +8,25 @@
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow sm:rounded-lg p-6">
-                <div class="flex justify-between mb-4">
+                <div class="flex justify-between items-center mb-4">
                     <h3 class="text-lg font-bold">Daftar Pertandingan</h3>
-                    <button
-                        data-modal-target="modalAdd"
-                        data-modal-toggle="modalAdd"
-                        class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-                    >Tambah Pertandingan</button>
+
+                    <div class="flex gap-2">
+                        <button
+                            data-modal-target="modalAdd"
+                            data-modal-toggle="modalAdd"
+                            class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                        >
+                            Tambah Pertandingan
+                        </button>
+
+                        <a href="{{ route('pertandingan.export') }}"
+                        class="bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700 transition">
+                        ⬇️ Export Excel
+                        </a>
+                    </div>
                 </div>
+
 
                 <table class="min-w-full border border-gray-300">
                     <thead class="bg-gray-200 text-gray-700">
@@ -34,7 +45,17 @@
                                 <a href="{{ route('pertandingan.mulai', $p->id) }}"
                                    class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
                                    Mulai
-                                </a>
+                                </a> &nbsp;
+                                <form action="{{ route('pertandingan.destroy', $p->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+
+                                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                                        onclick="return confirm('Yakin ingin menghapus pertandingan ini? Semua data peserta & skor akan hilang!')">
+                                        Hapus
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                         @endforeach
