@@ -57,7 +57,7 @@
 
                                         class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
                                         onclick="return confirm('Yakin ingin menghapus pertandingan ini? Semua data peserta & skor akan hilang!')">
-                                        Hapus
+                                        Hapus==========
                                     </button>
                                 </form>
                             </td>
